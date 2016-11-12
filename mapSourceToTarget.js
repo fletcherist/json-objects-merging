@@ -11,7 +11,11 @@ const MSG = {
 
 // Parse `source.json' file
 // Throw an error, when it is invalid
-const data = {}
+const data = {
+  source: {},
+  target: {},
+  output: {}
+}
 
 try {
   data.source = JSON.parse(_source)
@@ -57,26 +61,23 @@ const flattenArray = item => {
   // Iterate over keys is json object
   for (const key in item) {
 
+    // Also replace ['String'] with 'String'
+    // Replace [{Object}] with {Object}
+    item[key] = replaceArrayWithString(item[key])
+
     // Check if the element with current key is string
     // It could be also ['String'] — case we need to flatten
     const isString = typeof item[key][0] === 'string'
-    if (isString) {
-
-      // Replace ['String'] with 'String'
-      item[key] = replaceArrayWithString(item[key])
-    } else {
-      item[key] = replaceArrayWithString(item[key])
+    if (!isString) {
       // Going deeper to the nested object
-      flattenArray(item[key])
+      flattenArray(item[key]) 
     }
-
   }
 
   return item
 }
 
 // Array.prototype.findIndex()
-
 data.source.forEach(item => { 
   item = flattenArray(item)
 })
