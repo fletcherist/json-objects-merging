@@ -39,6 +39,9 @@ const getKeys = data => {
 
 // keys = getKeys(data.target)
 
+
+// Function replace ['String'] with 'String'
+// If array.length not equals 1 — return same array
 const replaceArrayWithString = array => {
   if (Array.isArray(array)) {
     if (array.length === 1) {
@@ -62,7 +65,7 @@ const flattenArray = item => {
       // Replace ['String'] with 'String'
       item[key] = replaceArrayWithString(item[key])
     } else {
-
+      item[key] = replaceArrayWithString(item[key])
       // Going deeper to the nested object
       flattenArray(item[key])
     }
@@ -71,6 +74,7 @@ const flattenArray = item => {
 
   return item
 }
+
 // Array.prototype.findIndex()
 
 data.source.forEach(item => { 
