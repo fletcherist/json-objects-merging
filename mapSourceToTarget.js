@@ -1,38 +1,4 @@
-const fs = require('fs')
-
-const _source = fs.readFileSync('source.json', 'utf-8')
-const _target = fs.readFileSync('target.json', 'utf-8')
-
-
-const MSG = {
-  invalidTargetJSON: 'Target json file is invalid.',
-  invalidSouceJSON: 'Source json file is invalid'
-}
-
-// Parse `source.json' file
-// Throw an error, when it is invalid
-const data = {
-  source: {},
-  target: {},
-  output: {}
-}
-
-try {
-  data.source = JSON.parse(_source)
-} catch (e) {
-  throw new Error(MSG.invalidTargetJSON)
-}
-
-// Parse 'target.json' file
-// Throw an error, when it is invalid
-try {
-  data.target = JSON.parse(_target)
-} catch (e) {
-  throw new Error(MSG.invalidSouceJSON)
-}
-
-
-const getKeys = data => {
+const getTargetKeys = data => {
   const keys = []
   data.forEach(item => {
     keys.push(item.key)
@@ -41,7 +7,14 @@ const getKeys = data => {
   return keys
 }
 
-// keys = getKeys(data.target)
+const getSourceASIN = data => {
+  const keys = []
+  data.forEach(item => {
+    keys.push(item.ASIN)
+  })
+
+  return keys
+}
 
 
 // Function replace ['String'] with 'String'
@@ -78,15 +51,42 @@ const flattenArray = item => {
 }
 
 // Array.prototype.findIndex()
-data.source.forEach(item => { 
-  item = flattenArray(item)
-})
 
 
+const mapSourceToTarget = (source, target) => {
 
-const _output = fs.writeFile(
-  'output.json',
-  JSON.stringify(data.source, null, 2), () => {
-})
+  source.forEach(item => { 
+    // Prettify objects in source.
+    item = flattenArray(item)
+  })
+
+  const keys = {}
+  keys.source = getSourceASIN(source)
+  keys.target = getTargetKeys(target)
+
+  // Iterate over target keys
+  for (key in keys.target) {
+    // console.log(keys.target[key])
+    // Find a pair in source keys
+    const index = keys.source.findIndex(item => {
+      return item === keys.target[key]
+    })
+    // -1 is when nothing found
+    if (index > -1) {
+
+      const sourceIndex = Number(index)
+      const targetIndex = Number(key)
+
+      // Merging objects
+      target[targetIndex] = Object.assign(
+        target[targetIndex], source[sourceIndex]
+      )
+
+    }
+  }
+
+  return target
+}
 
 
+module.exports = mapSourceToTarget
