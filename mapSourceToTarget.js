@@ -50,9 +50,6 @@ const flattenArray = item => {
   return item
 }
 
-// Array.prototype.findIndex()
-
-
 const mapSourceToTarget = (source, target) => {
 
   source.forEach(item => { 
@@ -87,6 +84,5 @@ const mapSourceToTarget = (source, target) => {
 
   return target
 }
-
 
 module.exports = mapSourceToTarget
