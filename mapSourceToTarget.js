@@ -16,7 +16,6 @@ const getSourceASIN = data => {
   return keys
 }
 
-
 // Function replace ['String'] with 'String'
 // If array.length not equals 1 — return same array
 const replaceArrayWithString = array => {
@@ -30,7 +29,6 @@ const replaceArrayWithString = array => {
 }
 
 const flattenArray = item => {
-
   // Iterate over keys is json object
   for (const key in item) {
 
@@ -51,7 +49,6 @@ const flattenArray = item => {
 }
 
 const mapSourceToTarget = (source, target) => {
-
   source.forEach(item => { 
     // Prettify objects in source.
     item = flattenArray(item)
@@ -70,7 +67,6 @@ const mapSourceToTarget = (source, target) => {
     })
     // -1 is when nothing found
     if (index > -1) {
-
       const sourceIndex = Number(index)
       const targetIndex = Number(key)
 
@@ -78,7 +74,6 @@ const mapSourceToTarget = (source, target) => {
       target[targetIndex] = Object.assign(
         target[targetIndex], source[sourceIndex]
       )
-
     }
   }
 
